@@ -22,7 +22,7 @@ module Rubylife
       @grid.each_with_index do |row, i|
       	row.each_with_index do |col,j|
       		if (grid[i][j] != cell)
-      			if(grid[i][j].alive? && (((cell.x - i).abs < (@rows-1)) && ((cell.y - j).abs < (@cols -1))))
+      			if(grid[i][j].alive? && (((cell.x - i).abs < 2) && ((cell.y - j).abs < 2)))
       				neighbours.push(grid[i][j])
       			end
       		end
