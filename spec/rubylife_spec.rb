@@ -19,36 +19,71 @@ describe Rubylife do
     end
 
     it 'should have live_neighbours method working' do
-      top_middle = subject.grid[0][1]
-      middle_middle = subject.grid[1][1]
-      top_right = subject.grid[0][2]
-      top_middle.alive = true
-      middle_middle.alive = true
-      top_right.alive = true
-      # p subject.live_neighbours(middle_middle)
-      expect(subject.live_neighbours(middle_middle).count).to be == 2
+
+      # __|_X_|_X_
+      # __|_X_|__
+      # __|__|__
+
+      target_cell = subject.grid[1][1]
+      cell2 = subject.grid[0][1]
+      cell3 = subject.grid[0][2]
+
+      cell2.alive = true
+      target_cell.alive = true
+      cell3.alive = true
+      # p subject.live_neighbours(target_cell)
+      expect(subject.live_neighbours(target_cell).count).to be == 2
     end
 
-    it 'should live_neighbours not cause false positive', neighbours: true do
-      top_middle = subject.grid[0][1]
-      middle_middle = subject.grid[2][2]
-      top_right = subject.grid[0][2]
-      top_middle.alive = true
-      middle_middle.alive = true
-      top_right.alive = true
-      # p subject.live_neighbours(middle_middle)
-      expect(subject.live_neighbours(middle_middle).count).to be == 0
+    it 'should live_neighbours not cause false positive for bottom/top cells', neighbours: true do
+
+      # __|_X_|_X_
+      # __|__|__
+      # __|__|_X_
+
+      target_cell = subject.grid[2][2]
+      cell2 = subject.grid[0][1]
+      cell3 = subject.grid[0][2]
+
+      cell2.alive = true
+      target_cell.alive = true
+      cell3.alive = true
+      # p subject.live_neighbours(target_cell)
+      expect(subject.live_neighbours(target_cell).count).to be == 0
     end
 
-    it 'should live_neighbours not cause false positive 2', neighbours2: true do
-      top_middle = subject.grid[2][1]
-      middle_middle = subject.grid[0][0]
-      top_right = subject.grid[2][2]
-      top_middle.alive = true
-      middle_middle.alive = true
-      top_right.alive = true
-      # p subject.live_neighbours(middle_middle)
-      expect(subject.live_neighbours(middle_middle).count).to be == 0
+    it 'should live_neighbours not cause false positive for top/bottom cells', neighbours2: true do
+
+      # _X_|__|__
+      # __|__|__
+      # __|_X_|_X_
+
+      target_cell = subject.grid[0][0]
+      cell2 = subject.grid[2][1]
+      cell3 = subject.grid[2][2]
+
+      cell2.alive = true
+      target_cell.alive = true
+      cell3.alive = true
+      # p subject.live_neighbours(target_cell)
+      expect(subject.live_neighbours(target_cell).count).to be == 0
+    end
+
+    it 'should live_neighbours not cause false positive for middle/bottom cells', neighbours3: true do
+
+      # __|_X_|__
+      # _X_|__|__
+      # __|__|_X_
+
+      target_cell = subject.grid[1][0]
+      cell2 = subject.grid[0][1]
+      cell3 = subject.grid[2][2]
+
+      cell2.alive = true
+      target_cell.alive = true
+      cell3.alive = true
+      # p subject.live_neighbours(target_cell)
+      expect(subject.live_neighbours(target_cell).count).to be == 1
     end
 
   end
