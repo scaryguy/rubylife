@@ -1,20 +1,19 @@
 module Rubylife
   class Board
-    attr_accessor :rows, :cols, :grid
+    attr_accessor :rows, :cols, :grid, :cells
 
     def initialize(rows=3, cols=3)
       @rows = rows
       @cols = cols
+      @cells = []
       @grid = Array.new(rows) do |row|
         Array.new(cols) do |col|
-          Cell.new(row, col)
+          cell = Cell.new(row, col)
+          @cells.push(cell)
+          cell
         end
       end
     end
-
-    # _0,0_|_0,1_|_0,2_
-    # _1,0_|_1,1_|_1,2_
-    # _2,0_|_2,1_|_2,2_
 
     def live_neighbours(cell)
       neighbours = []
@@ -28,6 +27,7 @@ module Rubylife
       		end
       	end
       end
+
       neighbours
     end
 
