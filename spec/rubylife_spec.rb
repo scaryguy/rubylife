@@ -13,25 +13,25 @@ require_relative './../lib/rubylife/cell.rb'
 describe Rubylife do
 
   context 'Game', game: true do
-  	let!(:game) { Rubylife::Game.new(Rubylife::Board.new, [[0,1],[1,1]]) }
+    let!(:game) { Rubylife::Game.new(Rubylife::Board.new, [[0,1],[1,1]]) }
 
-  	it 'should respond to board attribute' do
-  		expect(game).to respond_to :board
-  	end
+    it 'should respond to board attribute' do
+      expect(game).to respond_to :board
+    end
 
-  	it 'should start a new game with seeded cells' do
-  		expect(game.board.grid[0][1].alive).to eq(true)
-  		expect(game.board.grid[1][1].alive).to eq(true)
-  		expect(game.board.grid[2][1].alive).to eq(false)
-  	end
+    it 'should start a new game with seeded cells' do
+      expect(game.board.grid[0][1].alive).to eq(true)
+      expect(game.board.grid[1][1].alive).to eq(true)
+      expect(game.board.grid[2][1].alive).to eq(false)
+    end
 
-  	it 'should refresh all cells after a tick!', tick: true do
-  		# p game
-  		expect(game.board.grid[0][1].alive).to eq(true)
-  		game.tick!
-  		expect(game.board.grid[0][1].alive).to eq(false)
+    it 'should refresh all cells after a tick!', tick: true do
+      # p game
+      expect(game.board.grid[0][1].alive).to eq(true)
+      game.tick!
+      expect(game.board.grid[0][1].alive).to eq(false)
 
-  	end
+    end
 
   end
 
@@ -55,7 +55,6 @@ describe Rubylife do
       target_cell.alive = true
       cell2.alive = true
       cell3.alive = true
-      # p subject.live_neighbours(target_cell)
       expect(subject.live_neighbours(target_cell).count).to be == 2
     end
 
@@ -72,7 +71,6 @@ describe Rubylife do
       target_cell.alive = true
       cell2.alive = true
       cell3.alive = true
-      # p subject.live_neighbours(target_cell)
       expect(subject.live_neighbours(target_cell).count).to be == 0
     end
 
@@ -89,7 +87,6 @@ describe Rubylife do
       target_cell.alive = true
       cell2.alive = true
       cell3.alive = true
-      # p subject.live_neighbours(target_cell)
       expect(subject.live_neighbours(target_cell).count).to be == 0
     end
 
@@ -106,7 +103,6 @@ describe Rubylife do
       target_cell.alive = true
       cell2.alive = true
       cell3.alive = true
-      # p subject.live_neighbours(target_cell)
       expect(subject.live_neighbours(target_cell).count).to be == 1
     end
 
@@ -129,6 +125,74 @@ describe Rubylife do
       expect(subject).to be_alive
     end
 
+  end
+
+  # General Structure
+  # -----------------
+  # _0,0_|_0,1_|_0,2_
+  # _1,0_|_1,1_|_1,2_
+  # _2,0_|_2,1_|_2,2_
+  #------------------
+
+  context 'Rules' do
+
+    it 'should apply Rule #1' do
+      game = Rubylife::Game.new(Rubylife::Board.new, [[0,0],[2,1],[0,2]])
+      expect(game.board.grid[2][1].alive).to eq(true)
+      game.tick!
+      expect(game.board.grid[2][1].alive).to eq(false)
+    end
+
+
+    it 'should apply Rule #2' do
+      game = Rubylife::Game.new(Rubylife::Board.new, [[0,1],[1,1],[2,1]])
+      expect(game.board.grid[1][1].alive).to eq(true)
+      game.tick!
+      expect(game.board.grid[1][1].alive).to eq(true)
+    end
+
+    it 'should apply Rule #3' do
+      game = Rubylife::Game.new(Rubylife::Board.new, [[0,0],[0,1],[0,2], [1,2], [1,1]])
+      expect(game.board.grid[1][1].alive).to eq(true)
+      game.tick!
+      expect(game.board.grid[1][1].alive).to eq(false)
+    end
+
+    it 'should apply Rule #4' do
+      game = Rubylife::Game.new(Rubylife::Board.new, [[0,0],[0,1],[0,2]])
+      expect(game.board.grid[1][1].alive).to eq(false)
+      game.tick!
+      expect(game.board.grid[1][1].alive).to eq(true)
+      expect(game.board.grid[1][0].alive).to eq(false)
+      expect(game.board.grid[1][2].alive).to eq(false)
+    end
+
+  end
+
+  context 'Glider', glider: true do
+    it 'should work' do
+      game = Rubylife::Game.new(Rubylife::Board.new, [[2,0],[2,1],[2,2],[1,2],[0,1]])
+      p "Initial pattern:"
+      visualize(game.board.cells)
+      game.tick!
+
+      10.times do |time|
+        p "====================== Round #{time+1}"
+        visualize(game.board.cells)
+        game.tick!
+      end
+
+    end
+  end
+
+  def visualize(cells)
+    p "_#{c(cells, 0)}_|_#{c(cells, 1)}_|_#{c(cells, 2)}_"
+    p "_#{c(cells, 3)}_|_#{c(cells, 4)}_|_#{c(cells, 5)}_"
+    p "_#{c(cells, 6)}_|_#{c(cells, 7)}_|_#{c(cells, 8)}_"
+  end
+
+  def c(cells, index)
+    cells[index].alive? ? 'X' : '_'
   end
 
 end
